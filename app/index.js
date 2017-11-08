@@ -23,50 +23,51 @@ q.defer(d3.json, './assets/data/minneapolis-precincts-results.geo.json');
 q.defer(d3.json, './assets/data/st-paul-precincts-results.geo.json');
 q.await(function(error, minneapolisPrecincts, stPaulPrecincts) {
   // Scales for mayor
-  let precentDomain = [1, 15];
+  let minneapolisDomain = [1, 15];
   let minneapolisMayorScales = {
     'Jacob Frey': d3
       .scaleLinear()
-      .domain(precentDomain)
+      .domain(minneapolisDomain)
       // Pinks
       .range(['#fa9fb5', '#c51b8a']),
     'Betsy Hodges': d3
       .scaleLinear()
-      .domain(precentDomain)
+      .domain(minneapolisDomain)
       // Greens
       .range(['#a1d99b', '#31a354']),
     'Nekima Levy-Pounds': d3
       .scaleLinear()
-      .domain(precentDomain)
+      .domain(minneapolisDomain)
       // Oranges
       .range(['#fdae6b', '#e6550d']),
     'Tom Hoch': d3
       .scaleLinear()
-      .domain(precentDomain)
+      .domain(minneapolisDomain)
       // Purple
       .range(['#bcbddc', '#756bb1']),
     'Raymond Dehn': d3
       .scaleLinear()
-      .domain(precentDomain)
+      .domain(minneapolisDomain)
       // Greys
       .range(['#bdbdbd', '#636363'])
   };
 
   // Scales for mayor
+  let stPaulDomain = [1, 25];
   let stPaulMayorScales = {
     'Melvin Carter': d3
       .scaleLinear()
-      .domain(precentDomain)
+      .domain(stPaulDomain)
       // Pinks
       .range(['#fa9fb5', '#c51b8a']),
     'Pat Harris': d3
       .scaleLinear()
-      .domain(precentDomain)
+      .domain(stPaulDomain)
       // Greens
       .range(['#a1d99b', '#31a354']),
     'Dai Thao': d3
       .scaleLinear()
-      .domain(precentDomain)
+      .domain(stPaulDomain)
       // Oranges
       .range(['#fdae6b', '#e6550d'])
   };
@@ -171,6 +172,37 @@ function drawPrecinctMap(geoData, elementSelector, contest, rank, scales) {
       ')'
   );
 
+  // Tooltip
+  let tooltip = d3
+    .tip()
+    .attr('class', 'tooltip')
+    .html(function(d) {
+      let p = d.properties;
+      let relevantContest = _.find(p.contests, {
+        contestID: contest
+      });
+      let candidates = _.sortBy(
+        relevantContest.ranks[rank].candidates,
+        'votes'
+      ).reverse();
+
+      let output = [
+        p.precinctName,
+        'Ward: ' + p.wardName,
+        relevantContest.contestName + ' (' + (rank + 1) + ' choice)',
+        'Total votes: ' + relevantContest.precinctVotes,
+        ''
+      ];
+
+      _.each(_.take(candidates, 5), c => {
+        output.push(c.candidateName + ': ' + c.votes + ' (' + c.percent + '%)');
+      });
+
+      return output.join(' <br> ');
+    });
+  featureGroup.call(tooltip);
+
+  // Put together
   featureGroup
     .selectAll('path')
     .data(geoData.features)
@@ -178,20 +210,21 @@ function drawPrecinctMap(geoData, elementSelector, contest, rank, scales) {
     .append('path')
     .attr('d', path)
     .style('fill', d => {
-      let mayor = _.find(d.properties.contests, {
+      let relevantContest = _.find(d.properties.contests, {
         contestID: contest
       });
       let candidates = _.sortBy(
-        mayor.ranks[rank].candidates,
+        relevantContest.ranks[rank].candidates,
         'votes'
       ).reverse();
 
       if (candidates[0].votes > 0 && scales[candidates[0].candidateName]) {
-        console.log(candidates[0].percent - candidates[1].percent);
         return scales[candidates[0].candidateName](
           candidates[0].percent - candidates[1].percent
         );
       }
     })
-    .classed('precinct', true);
+    .classed('precinct', true)
+    .on('mouseover', tooltip.show)
+    .on('mouseout', tooltip.hide);
 }
