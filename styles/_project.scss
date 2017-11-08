@@ -42,18 +42,26 @@ p {
   margin: 0;
 }
 
+.source {
+  font-size: 0.65em;
+  padding-top: 0.5em;
+  margin-bottom: 2em;
+  color: #787878;
+}
+
 .map-container {
   width: 100%;
   min-height: 25em;
 }
 
 .precinct {
-  stroke: none;
-  stroke-width: 0.03;
+  stroke: #FEFEFE;
+  stroke-width: 0.002;
   fill: #FEFEFE;
 
   &:hover {
-    stroke: #fff;
+    stroke: #FEFEFE;
+    stroke-width: 0.021;
   }
 }
 
