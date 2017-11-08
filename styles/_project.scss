@@ -2,20 +2,49 @@
  * Project specific styling.
  */
 
+.embed {
+  .project-header,
+  footer[role="contentinfo"] {
+    display: none;
+  }
+}
+
+.loading {
+  padding: 2em;
+  text-align: center;
+
+  &.loaded {
+    display: none;
+  }
+}
+
 .mayor-container {
   width: 33%;
-  padding: 1em;
+  padding: 0.1em;
+  margin-bottom: 2em;
   float: left;
 
-  &.st-paul-mayor-container {
-    width: 50%;
+  .st-paul-first-choice-embed & {
+    width: 100%;
+    float: none;
   }
+}
+
+h3 {
+  font-size: 1em;
+  padding: 0.1em 0 0;
+  margin: 0 0 0.15em;
+}
+
+p {
+  font-size: 0.85em;
+  line-height: 1.15em;
+  margin: 0;
 }
 
 .map-container {
   width: 100%;
-  min-height: 20em;
-  border: 1px solid #DEDEDE;
+  min-height: 25em;
 }
 
 .precinct {
@@ -29,11 +58,21 @@
 }
 
 .legends {
+  text-align: center;
 
   svg {
-    float: left;
-    width: 20%;
-    min-height: 10em;
+    padding: 0.5em;
+    display: inline-block;
+    height: 5.5em;
+    width: 8em;
+
+    .legendTitle {
+      font-size: 0.85em;
+    }
+
+    .label {
+      font-size: 0.5em;
+    }
   }
 }
 
@@ -46,6 +85,12 @@
   color: #fff;
   border-radius: 2px;
   pointer-events: none;
+
+  .tooltip-header {
+    font-family: $font-popular;
+    font-size: 1.12em;
+    margin-bottom: none;
+  }
 
   /* Creates a small triangle extender for the tooltip */
   &:after {

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <% content.title = '2017 St. Paul first choice mayoral results'; %>
+  <head>
+    @@include('./_head.ejs.html')
+  </head>
+
+  <body class="embed st-paul-first-choice-embed">
+    <!-- Screen reader announcements -->
+    <div aria-live="polite" id="announcer" class="sr-only"></div>
+
+    <!-- Skip to main content -->
+    <a href="#main-content" class="to-main-content sr-only">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="project-header" role="banner">
+      @@include('./_header.ejs.html')
+    </header>
+
+    <!-- Main content here -->
+    <main id="main-content" class="content" role="main">
+      <div class="loading">Loading data...</div>
+
+      <div class="mayor-container st-paul">
+        <h3>Where Melvin Carter won St. Paul mayoral race</h3>
+        <p>The map below shows the percentage point margin in first round voting for each top candidate by precinct.</p>
+
+        <div class="legends st-paul-mayor-legends cf"></div>
+
+        <div id="st-paul-mayor-rank-1" class="map-container"></div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+      @@include('./_footer.ejs.html')
+    </footer>
+
+    <!-- Global/external scripts -->
+    <% if (config.js && config.js.globals) { config.js.globals.forEach(function(s) { %>
+      <script src="<%= s %>"></script>
+    <% }); } %>
+
+    <!-- Scripts -->
+    <script src="./app.bundle.js"></script>
+  </body>
+</html>

@@ -42,10 +42,15 @@ sources/2017-voting-preincts.geo.json, %convert <- sources/2017-voting-preincts/
 build/st-paul-precincts-results.geo.json, build/minneapolis-precincts-results.geo.json, %process <- sources/2017-voting-preincts.geo.json, sources/2017-local-results-precincts.csv
   node $BASE/lib/results-process.js
 
+; Polish
+build/st-paul-precincts-results.topo.json, build/minneapolis-precincts-results.topo.json, %polish <- build/st-paul-precincts-results.geo.json, build/minneapolis-precincts-results.geo.json
+  geo2topo precincts=$INPUT | toposimplify -f | topoquantize 1e5 > $OUTPUT
+  geo2topo precincts=$INPUT1 | toposimplify -f | topoquantize 1e5 > $OUTPUT1
+
 ; Copy files over
-%copy <- build/st-paul-precincts-results.geo.json, build/minneapolis-precincts-results.geo.json
+%copy <- build/st-paul-precincts-results.topo.json, build/minneapolis-precincts-results.topo.json
   mkdir -p assets/data/
-  cp $BASE/build/* assets/data/
+  cp $BASE/build/*.topo.json assets/data/
 
 
 ; Cleanup tasks

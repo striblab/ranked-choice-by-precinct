@@ -3,7 +3,7 @@
  */
 
 // Define globals that are added through the config.json file, here like this:
-/* global _, d3 */
+/* global _, d3, topojson */
 'use strict';
 
 // Dependencies
@@ -19,82 +19,93 @@ import utilsFn from './utils.js';
 utilsFn({});
 
 let q = d3.queue();
-q.defer(d3.json, './assets/data/minneapolis-precincts-results.geo.json');
-q.defer(d3.json, './assets/data/st-paul-precincts-results.geo.json');
-q.await(function(error, minneapolisPrecincts, stPaulPrecincts) {
-  // Scales for mayor
-  let minneapolisDomain = [1, 15];
-  let minneapolisMayorScales = {
-    'Jacob Frey': d3
-      .scaleLinear()
-      .domain(minneapolisDomain)
-      // Pinks
-      .range(['#fa9fb5', '#c51b8a']),
-    'Betsy Hodges': d3
-      .scaleLinear()
-      .domain(minneapolisDomain)
-      // Greens
-      .range(['#a1d99b', '#31a354']),
-    'Nekima Levy-Pounds': d3
-      .scaleLinear()
-      .domain(minneapolisDomain)
-      // Oranges
-      .range(['#fdae6b', '#e6550d']),
-    'Tom Hoch': d3
-      .scaleLinear()
-      .domain(minneapolisDomain)
-      // Purple
-      .range(['#bcbddc', '#756bb1']),
-    'Raymond Dehn': d3
-      .scaleLinear()
-      .domain(minneapolisDomain)
-      // Greys
-      .range(['#bdbdbd', '#636363'])
-  };
+//q.defer(d3.json, './assets/data/minneapolis-precincts-results.topo.json');
+q.defer(d3.json, './assets/data/st-paul-precincts-results.topo.json');
+q.await(function(error, stPaulTopology) {
+  // let minneapolisPrecincts = topojson.feature(
+  //   minneapolisTopology,
+  //   minneapolisTopology.objects.precincts
+  // );
+  let stPaulPrecincts = topojson.feature(
+    stPaulTopology,
+    stPaulTopology.objects.precincts
+  );
+
+  d3.select('.loading').classed('loaded', true);
+
+  // // Scales for mayor
+  // let minneapolisDomain = [1, 15];
+  // let minneapolisMayorScales = {
+  //   'Jacob Frey': d3
+  //     .scaleLinear()
+  //     .domain(minneapolisDomain)
+  //     // Pinks
+  //     .range(['#fa9fb5', '#c51b8a']),
+  //   'Betsy Hodges': d3
+  //     .scaleLinear()
+  //     .domain(minneapolisDomain)
+  //     // Greens
+  //     .range(['#a1d99b', '#31a354']),
+  //   'Nekima Levy-Pounds': d3
+  //     .scaleLinear()
+  //     .domain(minneapolisDomain)
+  //     // Oranges
+  //     .range(['#fdae6b', '#e6550d']),
+  //   'Tom Hoch': d3
+  //     .scaleLinear()
+  //     .domain(minneapolisDomain)
+  //     // Purple
+  //     .range(['#bcbddc', '#756bb1']),
+  //   'Raymond Dehn': d3
+  //     .scaleLinear()
+  //     .domain(minneapolisDomain)
+  //     // Greys
+  //     .range(['#bdbdbd', '#636363'])
+  // };
 
   // Scales for mayor
-  let stPaulDomain = [1, 25];
+  let stPaulDomain = [1, 40];
   let stPaulMayorScales = {
     'Melvin Carter': d3
-      .scaleLinear()
+      .scaleQuantize()
       .domain(stPaulDomain)
       // Pinks
-      .range(['#fa9fb5', '#c51b8a']),
+      .range(['#fbb4b9', '#f768a1', '#c51b8a', '#7a0177']),
     'Pat Harris': d3
-      .scaleLinear()
+      .scaleQuantize()
       .domain(stPaulDomain)
       // Greens
-      .range(['#a1d99b', '#31a354']),
+      .range(['#bae4b3', '#74c476', '#31a354', '#006d2c']),
     'Dai Thao': d3
-      .scaleLinear()
+      .scaleQuantize()
       .domain(stPaulDomain)
       // Oranges
-      .range(['#fdae6b', '#e6550d'])
+      .range(['#fdbe85', '#fd8d3c', '#e6550d', '#a63603'])
   };
 
-  drawPrecinctMap(
-    minneapolisPrecincts,
-    '#minneapolis-mayor-rank-1',
-    'MN-27-200-43000',
-    0,
-    minneapolisMayorScales
-  );
-  drawPrecinctMap(
-    minneapolisPrecincts,
-    '#minneapolis-mayor-rank-2',
-    'MN-27-200-43000',
-    1,
-    minneapolisMayorScales
-  );
-  drawPrecinctMap(
-    minneapolisPrecincts,
-    '#minneapolis-mayor-rank-3',
-    'MN-27-200-43000',
-    2,
-    minneapolisMayorScales
-  );
-
-  drawLegends('.minneapolis-mayor-legends', minneapolisMayorScales);
+  // drawPrecinctMap(
+  //   minneapolisPrecincts,
+  //   '#minneapolis-mayor-rank-1',
+  //   'MN-27-200-43000',
+  //   0,
+  //   minneapolisMayorScales
+  // );
+  // drawPrecinctMap(
+  //   minneapolisPrecincts,
+  //   '#minneapolis-mayor-rank-2',
+  //   'MN-27-200-43000',
+  //   1,
+  //   minneapolisMayorScales
+  // );
+  // drawPrecinctMap(
+  //   minneapolisPrecincts,
+  //   '#minneapolis-mayor-rank-3',
+  //   'MN-27-200-43000',
+  //   2,
+  //   minneapolisMayorScales
+  // );
+  //
+  // drawLegends('.minneapolis-mayor-legends', minneapolisMayorScales);
 
   drawPrecinctMap(
     stPaulPrecincts,
@@ -103,6 +114,20 @@ q.await(function(error, minneapolisPrecincts, stPaulPrecincts) {
     0,
     stPaulMayorScales
   );
+  // drawPrecinctMap(
+  //   stPaulPrecincts,
+  //   '#st-paul-mayor-rank-2',
+  //   'MN-62-200-58000',
+  //   1,
+  //   stPaulMayorScales
+  // );
+  // drawPrecinctMap(
+  //   stPaulPrecincts,
+  //   '#st-paul-mayor-rank-3',
+  //   'MN-62-200-58000',
+  //   3,
+  //   stPaulMayorScales
+  // );
 
   drawLegends('.st-paul-mayor-legends', stPaulMayorScales);
 });
@@ -119,10 +144,12 @@ function drawLegends(containerElement, scales) {
 
     let legend = d3
       .legendColor()
-      .labelFormat(d3.format('.2f'))
+      .labelFormat(d3.format('.0f'))
+      .orient('horizontal')
       .title(title)
-      .titleWidth(100)
-      .scale(scale);
+      .scale(scale)
+      .labelAlign('start')
+      .labels([1, 10, 20, 30, 40]);
 
     svg.select('.legend-group').call(legend);
   });
@@ -187,20 +214,33 @@ function drawPrecinctMap(geoData, elementSelector, contest, rank, scales) {
       ).reverse();
 
       let output = [
+        '<div class="tooltip-header">' +
+          candidates[0].candidateName +
+          ' lead by ' +
+          Math.round((candidates[0].percent - candidates[1].percent) * 10) /
+            10 +
+          ' percentage <br> points in the first round</div>',
         p.precinctName,
-        'Ward: ' + p.wardName,
-        relevantContest.contestName + ' (' + (rank + 1) + ' choice)',
+        //'Ward: ' + p.wardName,
+        //relevantContest.contestName + ' (' + (rank + 1) + ' choice)',
         'Total votes: ' + relevantContest.precinctVotes,
         ''
       ];
 
       _.each(_.take(candidates, 5), c => {
-        output.push(c.candidateName + ': ' + c.votes + ' (' + c.percent + '%)');
+        output.push(
+          c.candidateName +
+            ': ' +
+            c.votes +
+            ' (' +
+            Math.round(c.percent * 10) / 10 +
+            '%)'
+        );
       });
 
       return output.join(' <br> ');
     });
-  featureGroup.call(tooltip);
+  canvas.call(tooltip);
 
   // Put together
   featureGroup
