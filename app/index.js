@@ -16,7 +16,7 @@ import utilsFn from './utils.js';
 // import module from 'module';
 
 // Setup utils function
-utilsFn({});
+utilsFn({ useView: false });
 
 let q = d3.queue();
 //q.defer(d3.json, './assets/data/minneapolis-precincts-results.topo.json');
