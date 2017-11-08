@@ -1,3 +1,30 @@
 /**
  * Project specific styling.
  */
+
+.mayor-container {
+  width: 33%;
+  padding: 1em;
+  float: left;
+}
+
+.map-container {
+  width: 100%;
+  min-height: 20em;
+  border: 1px solid #DEDEDE;
+}
+
+.precinct {
+  stroke: #232323;
+  stroke-width: 0.01;
+  fill: #FEFEFE;
+}
+
+.legends {
+
+  svg {
+    float: left;
+    width: 20%;
+    min-height: 10em;
+  }
+}
