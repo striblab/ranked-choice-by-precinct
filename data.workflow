@@ -38,6 +38,14 @@ sources/2017-voting-preincts/bdry_votingdistricts.shp, %extract <- sources/2017-
 sources/2017-voting-preincts.geo.json, %convert <- sources/2017-voting-preincts/bdry_votingdistricts.shp
   ogr2ogr -f "GeoJSON" $OUTPUT $INPUT -t_srs "EPSG:4326"
 
+; Process
+build/st-paul-precincts-results.geo.json, build/minneapolis-precincts-results.geo.json, %process <- sources/2017-voting-preincts.geo.json, sources/2017-local-results-precincts.csv
+  node $BASE/lib/results-process.js
+
+; Copy files over
+%copy <- build/st-paul-precincts-results.geo.json, build/minneapolis-precincts-results.geo.json
+  mkdir -p assets/data/
+  cp $BASE/build/* assets/data/
 
 
 ; Cleanup tasks

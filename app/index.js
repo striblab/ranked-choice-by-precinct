@@ -18,13 +18,13 @@ import utilsFn from './utils.js';
 // Setup utils function
 utilsFn({});
 
-d3.json('./assets/data/minneapolis-precincts-results.geo.json', function(
-  error,
-  geoData
-) {
+let q = d3.queue();
+q.defer(d3.json, './assets/data/minneapolis-precincts-results.geo.json');
+q.defer(d3.json, './assets/data/st-paul-precincts-results.geo.json');
+q.await(function(error, minneapolisPrecincts, stPaulPrecincts) {
   // Scales for mayor
   let precentDomain = [1, 15];
-  let mayorScales = {
+  let minneapolisMayorScales = {
     'Jacob Frey': d3
       .scaleLinear()
       .domain(precentDomain)
@@ -52,29 +52,58 @@ d3.json('./assets/data/minneapolis-precincts-results.geo.json', function(
       .range(['#bdbdbd', '#636363'])
   };
 
+  // Scales for mayor
+  let stPaulMayorScales = {
+    'Melvin Carter': d3
+      .scaleLinear()
+      .domain(precentDomain)
+      // Pinks
+      .range(['#fa9fb5', '#c51b8a']),
+    'Pat Harris': d3
+      .scaleLinear()
+      .domain(precentDomain)
+      // Greens
+      .range(['#a1d99b', '#31a354']),
+    'Dai Thao': d3
+      .scaleLinear()
+      .domain(precentDomain)
+      // Oranges
+      .range(['#fdae6b', '#e6550d'])
+  };
+
   drawPrecinctMap(
-    geoData,
+    minneapolisPrecincts,
     '#minneapolis-mayor-rank-1',
     'MN-27-200-43000',
     0,
-    mayorScales
+    minneapolisMayorScales
   );
   drawPrecinctMap(
-    geoData,
+    minneapolisPrecincts,
     '#minneapolis-mayor-rank-2',
     'MN-27-200-43000',
     1,
-    mayorScales
+    minneapolisMayorScales
   );
   drawPrecinctMap(
-    geoData,
+    minneapolisPrecincts,
     '#minneapolis-mayor-rank-3',
     'MN-27-200-43000',
     2,
-    mayorScales
+    minneapolisMayorScales
   );
 
-  drawLegends('.mayor-legends', mayorScales);
+  drawLegends('.minneapolis-mayor-legends', minneapolisMayorScales);
+
+  drawPrecinctMap(
+    stPaulPrecincts,
+    '#st-paul-mayor-rank-1',
+    'MN-62-200-58000',
+    0,
+    stPaulMayorScales
+  );
+
+  drawLegends('.st-paul-mayor-legends', stPaulMayorScales);
 });
 
 // Draw legends

@@ -10,7 +10,8 @@ Analysis of ranked-choice races by precinct
 
 ### Data processing
 
-1. drake -w data.workflow
+1. `drake -w data.workflow %copy`
+    * This will download the necessary files, convert, process and copy the files to `assets/data/`
 
 ## Embed
 

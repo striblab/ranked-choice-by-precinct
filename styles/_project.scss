@@ -6,6 +6,10 @@
   width: 33%;
   padding: 1em;
   float: left;
+
+  &.st-paul-mayor-container {
+    width: 50%;
+  }
 }
 
 .map-container {
@@ -15,7 +19,7 @@
 }
 
 .precinct {
-  stroke: #232323;
+  stroke: none;
   stroke-width: 0.01;
   fill: #FEFEFE;
 }
